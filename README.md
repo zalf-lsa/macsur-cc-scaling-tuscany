@@ -1,1 +1,0 @@
-# macsur-cc-scaling-tuscany

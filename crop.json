@@ -2,15 +2,15 @@
     "crops": {
         "SM": {
             "cropParams": {
-                "species": ["include-from-file", "monica-parameters/crops/maize.json"],
-                "cultivar": ["include-from-file", "monica-parameters/crops/maize/silage maize.json"]
+                "species": ["include-from-file", "monica-parameters/crops/maize_tuscany.json"],
+                "cultivar": ["include-from-file", "monica-parameters/crops/maize/silage maize_tuscany.json"]
             },
             "residueParams": ["include-from-file", "monica-parameters/crop-residues/maize.json"]
         },
         "DW": {
             "cropParams": {
-                "species": ["include-from-file", "monica-parameters/crops/wheat.json"],
-                "cultivar": ["include-from-file", "monica-parameters/crops/wheat/winter wheat.json"]
+                "species": ["include-from-file", "monica-parameters/crops/wheat_tuscany.json"],
+                "cultivar": ["include-from-file", "monica-parameters/crops/wheat/winter wheat_tuscany.json"]
             },
             "residueParams": ["include-from-file", "monica-parameters/crop-residues/wheat.json"]
         }
@@ -22,13 +22,7 @@
 
     "crop-rotations": {
         "W": [
-            {
-                "worksteps": [
-                    { "date": "0000-01-01", "type": "SetValue", "var": ["NH4", [1,3]], "value": 0.01 },
-                    { "date": "0000-01-01", "type": "SetValue", "var": ["NH4", [4,12]], "value": 0.002222 },
-                    { "date": "0000-01-01", "type": "SetValue", "var": ["NH4", [13,15]], "value": 0.0003333 }
-                ]
-            },
+            
             {
                 "worksteps": [
                     { "date": "0000-11-10", "type": "Seed", "crop": ["ref", "crops", "DW"] },
@@ -55,13 +49,7 @@
             }
         ],
         "M": [
-            {
-                "worksteps": [
-                    { "date": "0000-01-01", "type": "SetValue", "var": ["NH4", [1,3]], "value": 0.01 },
-                    { "date": "0000-01-01", "type": "SetValue", "var": ["NH4", [4,12]], "value": 0.002222 },
-                    { "date": "0000-01-01", "type": "SetValue", "var": ["NH4", [13,15]], "value": 0.0003333 }
-                ]
-            },
+            
             {
                 "worksteps": [
                     { "date": "0000-04-03", "type": "Seed", "crop": ["ref", "crops", "SM"] },

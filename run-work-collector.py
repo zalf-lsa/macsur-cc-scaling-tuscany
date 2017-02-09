@@ -75,7 +75,7 @@ def create_output(cl_res, cl_row, cl_col, s_res, s_row, s_col, crop_id, period, 
                 year_to_vals[vals.get("Year", 0)].update(vals)
 
         for year, vals in year_to_vals.iteritems():
-            if len(vals) > 0 and (crop_id == "WW" or year > 1980):
+            if len(vals) > 0 and (crop_id == "W" or year > 1980):
                 if cl_res <= s_res:
                     gridcell = "C" + str(cl_col) + ":R" + str(cl_row)
                 else:
@@ -215,7 +215,21 @@ def collector():
         elif write_normal_output_files:
             print "received work result ", i, " customId: ", result.get("customId", "")
 
-            with open("out/out-" + str(i) + ".csv", 'wb') as _:
+            custom_id = result["customId"]
+            ci_parts = custom_id.split("|")
+            crop_id = ci_parts[0]
+            climate_resolution = ci_parts[1]
+            cl_row_, cl_col_ = ci_parts[2][1:-1].split("/")
+            soil_resolution = ci_parts[3]
+            s_row_, s_col_ = ci_parts[4][1:-1].split("/")
+            period = ci_parts[5]
+            grcp = ci_parts[6]
+            production_situation = ci_parts[8]
+            file_name = crop_id + "_" + production_situation + "_P" + period + "_GRP" + grcp + "_cr" + climate_resolution + "c"+ cl_col_ + "r"+ cl_row_ + "xsr" + soil_resolution + "c"+ s_col_ + "r"+ s_row_
+            
+
+            #with open("out/out-" + str(i) + ".csv", 'wb') as _:
+            with open("out/out-" + file_name + ".csv", 'wb') as _:
                 writer = csv.writer(_, delimiter=",")
 
                 for data_ in result.get("data", []):

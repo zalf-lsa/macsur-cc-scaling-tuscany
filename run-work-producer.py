@@ -42,14 +42,20 @@ import monica_io
 #print "sys.path: ", sys.path
 #print "sys.version: ", sys.version
 
-INCLUDE_FILE_BASE_PATH = "C:/Users/stella/MONICA"
-ARCHIVE_PATH_TO_PROJECT = "Z:/projects/macsur-scaling-cc-tuscany/"
+#INCLUDE_FILE_BASE_PATH = "C:/Users/stella/MONICA"
+INCLUDE_FILE_BASE_PATH = "C:/Users/stella/Documents/GitHub"
+LOCAL_ARCHIVE_PATH_TO_PROJECT = "Z:/projects/macsur-scaling-cc-tuscany/"
+ARCHIVE_PATH_TO_PROJECT = "/archiv-daten/md/projects/macsur-scaling-cc-tuscany/"
+LOCAL_RUN = False
 
 def main():
     "main"
 
     context = zmq.Context()
-    socket = context.socket(zmq.PUSH)
+    if LOCAL_RUN:
+        socket = context.socket(zmq.REQ)
+    else:
+        socket = context.socket(zmq.PUSH)
     #port = 6666 if len(sys.argv) == 1 else sys.argv[1]
     config = {
         "port": 6666,
@@ -62,7 +68,10 @@ def main():
             if k in config:
                 config[k] = int(v) 
 
-    socket.connect("tcp://cluster2:" + str(config["port"]))
+    if LOCAL_RUN:
+        socket.connect("tcp://localhost:" + str(config["port"]))
+    else:
+        socket.connect("tcp://cluster2:" + str(config["port"]))
 
     with open("sim.json") as _:
         sim = json.load(_)
@@ -133,7 +142,7 @@ def main():
 
             return lats
         
-    latitudes = read_latitude(ARCHIVE_PATH_TO_PROJECT + "Soil_data/grid_tuscany.csv")
+    latitudes = read_latitude(LOCAL_ARCHIVE_PATH_TO_PROJECT + "Soil_data/grid_tuscany.csv")
 
 
     def read_lookup_file(filename): 
@@ -150,7 +159,7 @@ def main():
                   })
             return lll
 
-    lookup = read_lookup_file(ARCHIVE_PATH_TO_PROJECT + "/unit_description/MACSUR_TUS_CC_cell_lookup.csv")
+    lookup = read_lookup_file(LOCAL_ARCHIVE_PATH_TO_PROJECT + "/unit_description/MACSUR_TUS_CC_cell_lookup.csv")
 
 
     def read_soil_properties(filename):
@@ -176,9 +185,9 @@ def main():
             return soil
 
     soil = {
-        25: read_soil_properties(ARCHIVE_PATH_TO_PROJECT + "Soil_data/climate_change_Tus_soil_r25.csv"),
-        50: read_soil_properties(ARCHIVE_PATH_TO_PROJECT + "Soil_data/climate_change_Tus_soil_r50.csv"),
-        100: read_soil_properties(ARCHIVE_PATH_TO_PROJECT + "Soil_data/climate_change_Tus_soil_r100.csv")
+        25: read_soil_properties(LOCAL_ARCHIVE_PATH_TO_PROJECT + "Soil_data/climate_change_Tus_soil_r25.csv"),
+        50: read_soil_properties(LOCAL_ARCHIVE_PATH_TO_PROJECT + "Soil_data/climate_change_Tus_soil_r50.csv"),
+        100: read_soil_properties(LOCAL_ARCHIVE_PATH_TO_PROJECT + "Soil_data/climate_change_Tus_soil_r100.csv")
     }
 
 
@@ -212,7 +221,7 @@ def main():
                 lll["Thickness"] = profile_depth
 
             #!!!! danger, this is changing in memory sims events structure and events can only then be assigned to env
-            sims["output"][crop_id][1][6][1][1] = int(min(math.floor(profile_depth * 10) + 1, 20))
+            sims["output"][crop_id][1][6][1][1] = int(min(math.ceil(profile_depth * 10), 20))
 
             layers.append(lll)
 
@@ -283,12 +292,24 @@ def main():
                             period = period_gcm["period"]
                             gcm = period_gcm["gcm-rcp"]
 
-                            climate_filename = "daily_mean_P{}_RES{}_C{:04d}R{}.csv".format(period, climate_resolution, col, row)
-                            env["pathToClimateCSV"] = ARCHIVE_PATH_TO_PROJECT + "Climate_data/res_" + str(climate_resolution) + "/period_" + period + "/GRCP_" + grcp + "/" + climate_filename
+                            if period != "0":
+                                continue
+                            if production_id != "PLP":
+                                continue
+
+                            if period != "0":
+                                climate_filename = "daily_mean_P{}_GRCP_{}_RES{}_C{:04d}R{}.csv".format(period, grcp, climate_resolution, col, row)
+                            else:
+                                climate_filename = "daily_mean_P{}_RES{}_C{:04d}R{}.csv".format(period, climate_resolution, col, row)
+                                
+                            if LOCAL_RUN:
+                                env["pathToClimateCSV"] = LOCAL_ARCHIVE_PATH_TO_PROJECT + "Climate_data/res_" + str(climate_resolution) + "/period_" + period + "/GRCP_" + grcp + "/" + climate_filename
+                            else:
+                                env["pathToClimateCSV"] = ARCHIVE_PATH_TO_PROJECT + "Climate_data/res_" + str(climate_resolution) + "/period_" + period + "/GRCP_" + grcp + "/" + climate_filename
 
                             #initialize nitrate/ammonium in soil layers at start of simulation 
-                            for i in range(3):
-                                env["cropRotation"][0]["worksteps"][i]["date"] = start_year[period] + "-01-01"
+                            #for i in range(3):
+                            #    env["cropRotation"][0]["worksteps"][i]["date"] = start_year[period] + "-01-01"
 
                             env["customId"] = crop_id \
                                                 + "|" + str(climate_resolution) \
@@ -300,8 +321,10 @@ def main():
                                                 + "|" + gcm \
                                                 + "|" + production_id
 
+                            
                             socket.send_json(env)
                             print "sent env ", i, " customId: ", env["customId"]
+                            #exit()
                             i += 1
 
 

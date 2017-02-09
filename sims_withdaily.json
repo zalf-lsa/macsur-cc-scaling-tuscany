@@ -76,7 +76,15 @@
 				["N2O|N2O-year", "SUM"],
 				["NLeach|NLeach-year", "SUM"],
 				["PercolationRate|WDrain-year", 15, "SUM"]
-			]			
+			],
+			"daily", [
+				"Date", "Crop", "TraDef", "NDef", "HeatRed",
+				"Stage", "RelDev", "AbBiom", ["OrgBiom", "Fruit"], "Yield","LAI",
+				"Tmin", "Tavg", "Tmax", "Wind", "Globrad", "Relhumid", "Sunhours",
+				"NFert", ["OrgBiom", "Root"], "Precip", "NLeach", "N2O", "PercolationRate", "Act_ET"
+			]
+
+			
 		]
 	}
 }

@@ -72,10 +72,12 @@ def create_output(cl_res, cl_row, cl_col, s_res, s_row, s_col, crop_id, period, 
                     print "Missing Year in result section. Skipping results section."
                     continue
 
-                year_to_vals[vals.get("Year", 0)].update(vals)
+                #this filters out the last started (but not finished) cropping season for wheat
+                if vals.get("DOY", 366) < 365 or crop_id == "M":
+                    year_to_vals[vals.get("Year", 0)].update(vals)
 
         for year, vals in year_to_vals.iteritems():
-            if len(vals) > 0 and (crop_id == "W" or year > 1980):
+            if len(vals) > 0: #and (crop_id == "W" or year > 1980):
                 if cl_res <= s_res:
                     gridcell = "C" + str(cl_col) + ":R" + str(cl_row)
                 else:
@@ -86,7 +88,7 @@ def create_output(cl_res, cl_row, cl_col, s_res, s_row, s_col, crop_id, period, 
                     period,
                     gcm,
                     year,
-                    vals.get("Yield", "nan"),
+                    vals.get("Yield", "nan") / 1000.0 if "Yield" in vals else "nan",
                     vals.get("Biom-ma", "nan") / 1000.0 if "Biom-ma" in vals else "nan",
                     vals.get("CumET", "nan"),
                     "nan", #PAR
@@ -101,9 +103,12 @@ def create_output(cl_res, cl_row, cl_col, s_res, s_row, s_col, crop_id, period, 
                     vals.get("N2O-year", "nan"),
                     vals.get("NLeach-year", "nan"),
                     vals.get("NLeach-crop", "nan"),
-                    vals.get("WDrain-crop", "nan"),
                     vals.get("WDrain-year", "nan"),
-                    vals.get("RootDep", "nan") / 10.0 if "RootDep" in vals else "nan"
+                    vals.get("WDrain-crop", "nan"),
+                    vals.get("RootDep", "nan") / 10.0 if "RootDep" in vals else "nan",
+                    #vals.get("OrgBiom", "nan") #for debugging purposes
+                    #vals.get("Precip-crop", "nan"),
+                    #vals.get("Precip-year", "nan"),
                 ])
 
     return out

@@ -1,11 +1,26 @@
 {
   "SiteParameters": {
-    "Latitude": 52.80939865112305,
+    "Latitude": 44,
     "Slope": 0,
     "HeightNN": [0 , "m"],
-    "NDeposition": 0,
+    "NDeposition": 30,
 		
-    "SoilProfileParameters": []
+    "SoilProfileParameters": [
+			{
+				"Thickness": [0.5, "m"],
+				"PermanentWiltingPoint": [0.067, "m3 m-3"],
+				"FieldCapacity": [0.195, "m3 m-3"],
+				"PoreVolume": [0.306, "m3 m-3"],
+				"Clay": [0.211, "% [0-1]"],
+				"Sand": [0.297, "% [0-1]"],
+				"Sceleton": 0.23,
+				"SoilBulkDensity": [1420, "kg m-3"],
+				"SoilOrganicCarbon": [1.13, "%"],
+				"pH": 8.1,				
+				
+				"SoilMoisturePercentFC": [100, "% [0-100]"]
+			}
+		]
   },
 	
 	"SoilTemperatureParameters": ["include-from-file", "monica-parameters/user-parameters/hermes-soil-temperature.json"],

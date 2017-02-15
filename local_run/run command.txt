@@ -1,0 +1,2 @@
+cd C:\Users\stella\Documents\GitHub\monica
+project-files\Win32\Release\monica-run -o C:\Users\stella\Documents\GitHub\macsur-cc-scaling-tuscany\local_run\out.csv C:\Users\stella\Documents\GitHub\macsur-cc-scaling-tuscany\local_run\sim.json

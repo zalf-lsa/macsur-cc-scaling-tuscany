@@ -219,6 +219,10 @@ def main():
             profile_depth = layer["depth"]
             if iii == 0:
                 lll["Thickness"] = profile_depth
+                if crop_id == "M":
+                    max_rootdepth = min(profile_depth, 0.5)
+                elif crop_id == "W":
+                    max_rootdepth = min(profile_depth, 0.4)
 
             #!!!! danger, this is changing in memory sims events structure and events can only then be assigned to env
             sims["output"][crop_id][1][6][1][1] = int(min(math.ceil(profile_depth * 10), 20))
@@ -226,6 +230,7 @@ def main():
             layers.append(lll)
 
         site["SiteParameters"]["SoilProfileParameters"] = layers
+        return max_rootdepth
         #print site["SiteParameters"]["SoilProfileParameters"]
 
 
@@ -261,16 +266,16 @@ def main():
         climate_resolution = c2s["climate"]
         soil_resolution = c2s["soil"]
 
-        climate_to_soils = defaultdict(list)
+        climate_to_soils = defaultdict(set)
         for mmm in lookup:
-            climate_to_soils[mmm[climate_resolution]].append(mmm[soil_resolution])
+            climate_to_soils[mmm[climate_resolution]].add(mmm[soil_resolution])
 
         for climate_coord, soil_coords in climate_to_soils.iteritems():
 
             for row, col in soil_coords:
 
                 for crop_id in ["W", "M"]:
-                    update_soil_crop_dates(soil_resolution, row, col, crop_id)
+                    max_rootdepth = update_soil_crop_dates(soil_resolution, row, col, crop_id)
                     env = monica_io.create_env_json_from_json_config({
                         "crop": crop,
                         "site": site,
@@ -280,6 +285,10 @@ def main():
 
                     env["csvViaHeaderOptions"] = sim["climate.csv-options"]
                     env["events"] = sims["output"][crop_id]
+                    for workstep in env["cropRotation"][0]["worksteps"]:
+                        if workstep["type"] == "Seed":
+                            workstep["crop"]["cropParams"]["cultivar"]["CropSpecificMaxRootingDepth"] = max_rootdepth
+                            break
                     
                     for production_id, switches in production_situations.iteritems():
 
@@ -294,7 +303,11 @@ def main():
 
                             if period != "0":
                                 continue
-                            if production_id != "PLP":
+                            if climate_resolution != 25:
+                                continue
+                            if soil_resolution != 25:
+                                continue
+                            if crop_id != "M":
                                 continue
 
                             if period != "0":

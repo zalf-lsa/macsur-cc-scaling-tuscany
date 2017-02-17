@@ -211,18 +211,18 @@ def main():
                 "PermanentWiltingPoint": [layer["pwp"], "m3 m-3"],
                 "PoreVolume": [layer["sat"], "m3 m-3"],
                 "SoilMoisturePercentFC": [80.0 if crop_id == "M" else 50.0, "% [0-100]"],
-                "Sand": layer["sand"] / 100.0,
-                "Clay": layer["clay"] / 100.0,
+                "Sand": layer["sand"],
+                "Clay": layer["clay"],
                 "Sceleton": layer["sceleton"],
                 "pH": layer["ph"]
             }
             profile_depth = layer["depth"]
             if iii == 0:
                 lll["Thickness"] = profile_depth
-                if crop_id == "M":
-                    max_rootdepth = min(profile_depth, 0.5)
-                elif crop_id == "W":
-                    max_rootdepth = min(profile_depth, 0.4)
+            if crop_id == "M":
+                max_rootdepth = min(profile_depth, 0.5)
+            elif crop_id == "W":
+                max_rootdepth = min(profile_depth, 0.4)
 
             #!!!! danger, this is changing in memory sims events structure and events can only then be assigned to env
             sims["output"][crop_id][1][6][1][1] = int(min(math.ceil(profile_depth * 10), 20))
@@ -301,14 +301,14 @@ def main():
                             period = period_gcm["period"]
                             gcm = period_gcm["gcm-rcp"]
 
-                            if period != "0":
-                                continue
-                            if climate_resolution != 25:
-                                continue
-                            if soil_resolution != 25:
-                                continue
-                            if crop_id != "M":
-                                continue
+                            #if period != "0":
+                            #    continue
+                            #if climate_resolution != 25:
+                            #    continue
+                            #if soil_resolution != 25:
+                            #    continue
+                            #if crop_id != "W":
+                            #    continue
 
                             if period != "0":
                                 climate_filename = "daily_mean_P{}_GRCP_{}_RES{}_C{:04d}R{}.csv".format(period, grcp, climate_resolution, col, row)

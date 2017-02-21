@@ -22,7 +22,14 @@
 
     "crop-rotations": {
         "W": [
-            
+            {
+                "worksteps": [
+                    { "date": "1980-01-01", "type": "SetValue", "var": ["NH4", [1,3]], "value": 0.01 },
+                    { "date": "1980-01-01", "type": "SetValue", "var": ["NH4", [4,12]], "value": 0.002222 },
+                    { "date": "1980-01-01", "type": "SetValue", "var": ["NH4", [13,15]], "value": 0.0003333 }
+                ]
+
+            },            
             {
                 "worksteps": [
                     { "date": "0000-11-10", "type": "Seed", "crop": ["ref", "crops", "DW"] },
@@ -44,7 +51,15 @@
                         "amount": [50, "kg N"],
                         "partition": ["ref", "fert-params", "U"]
                     },
-                    { "date": "0001-07-25", "type": "Harvest"},
+                    { 
+                        "type": "AutomaticHarvesting", 
+                        "latest-date": "0001-07-25",
+                        "min-%-asw": 0,
+                        "max-%-asw": 100,
+                        "max-3d-precip-sum": 999,
+                        "max-curr-day-precip": 999,
+                        "harvest-time": "maturity"
+				    },
                     { "date": "0001-09-20", "type": "TillageApplication",
                       "depth": 0.3
                     }
@@ -52,7 +67,14 @@
             }
         ],
         "M": [
-            
+            {
+                "worksteps": [
+                    { "date": "1980-01-01", "type": "SetValue", "var": ["NH4", [1,3]], "value": 0.01 },
+                    { "date": "1980-01-01", "type": "SetValue", "var": ["NH4", [4,12]], "value": 0.002222 },
+                    { "date": "1980-01-01", "type": "SetValue", "var": ["NH4", [13,15]], "value": 0.0003333 }
+                ]
+
+            },
             {
                 "worksteps": [
                     { "date": "0000-04-03", "type": "Seed", "crop": ["ref", "crops", "SM"] },
@@ -68,7 +90,15 @@
                         "amount": [220, "kg N"],
                         "partition": ["ref", "fert-params", "U"]
                     },
-                    { "date": "0000-11-03", "type": "Harvest"},
+                    { 
+                        "type": "AutomaticHarvesting", 
+                        "latest-date": "0000-11-03",
+                        "min-%-asw": 0,
+                        "max-%-asw": 100,
+                        "max-3d-precip-sum": 999,
+                        "max-curr-day-precip": 999,
+                        "harvest-time": "maturity"
+				    },
                     { "date": "0000-11-10", "type": "TillageApplication",
                       "depth": 0.3
                     }

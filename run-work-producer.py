@@ -301,6 +301,15 @@ def main():
                             period = period_gcm["period"]
                             gcm = period_gcm["gcm-rcp"]
 
+                            init_date = {
+                                "0": "1980",
+                                "2": "2040",
+                                "3": "2070"
+                            }[period] + "-01-01"
+
+                            for kkk in range(3):
+                                env["cropRotation"][0]["worksteps"][kkk]["date"] = init_date
+
                             #if period != "0":
                             #    continue
                             #if climate_resolution != 25:

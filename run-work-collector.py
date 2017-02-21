@@ -170,7 +170,7 @@ def collector():
     socket.RCVTIMEO = 1000
     leave = False
     write_normal_output_files = False
-    start_writing_lines_threshold = 30
+    start_writing_lines_threshold = 270
     while not leave:
 
         try:

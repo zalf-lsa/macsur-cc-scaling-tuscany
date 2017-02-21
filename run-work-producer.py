@@ -42,11 +42,21 @@ import monica_io
 #print "sys.path: ", sys.path
 #print "sys.version: ", sys.version
 
-#INCLUDE_FILE_BASE_PATH = "C:/Users/stella/MONICA"
-INCLUDE_FILE_BASE_PATH = "C:/Users/stella/Documents/GitHub"
-LOCAL_ARCHIVE_PATH_TO_PROJECT = "Z:/projects/macsur-scaling-cc-tuscany/"
-ARCHIVE_PATH_TO_PROJECT = "/archiv-daten/md/projects/macsur-scaling-cc-tuscany/"
+USER = "berg"
 LOCAL_RUN = False
+
+PATHS = {
+    "stella": {
+        "INCLUDE_FILE_BASE_PATH": "C:/Users/stella/Documents/GitHub",
+        "LOCAL_ARCHIVE_PATH_TO_PROJECT": "Z:/projects/macsur-scaling-cc-tuscany/",
+        "ARCHIVE_PATH_TO_PROJECT": "/archiv-daten/md/projects/macsur-scaling-cc-tuscany/"
+    },
+    "berg": {
+        "INCLUDE_FILE_BASE_PATH": "C:/Users/berg.ZALF-AD.000/Documents/GitHub",
+        "LOCAL_ARCHIVE_PATH_TO_PROJECT": "P:/macsur-scaling-cc-tuscany/",
+        "ARCHIVE_PATH_TO_PROJECT": "/archiv-daten/md/projects/macsur-scaling-cc-tuscany/"
+    }
+}
 
 def main():
     "main"
@@ -85,7 +95,7 @@ def main():
     with open("sims.json") as _:
         sims = json.load(_)
 
-    sim["include-file-base-path"] = INCLUDE_FILE_BASE_PATH
+    sim["include-file-base-path"] = PATHS[USER]["INCLUDE_FILE_BASE_PATH"]
 
     period_gcms = [
         {"grcp": "0", "period": "0", "gcm-rcp": "0_0"},
@@ -142,7 +152,7 @@ def main():
 
             return lats
         
-    latitudes = read_latitude(LOCAL_ARCHIVE_PATH_TO_PROJECT + "Soil_data/grid_tuscany.csv")
+    latitudes = read_latitude(PATHS[USER]["LOCAL_ARCHIVE_PATH_TO_PROJECT"] + "Soil_data/grid_tuscany.csv")
 
 
     def read_lookup_file(filename): 
@@ -159,7 +169,7 @@ def main():
                   })
             return lll
 
-    lookup = read_lookup_file(LOCAL_ARCHIVE_PATH_TO_PROJECT + "/unit_description/MACSUR_TUS_CC_cell_lookup.csv")
+    lookup = read_lookup_file(PATHS[USER]["LOCAL_ARCHIVE_PATH_TO_PROJECT"] + "/unit_description/MACSUR_TUS_CC_cell_lookup.csv")
 
 
     def read_soil_properties(filename):
@@ -185,9 +195,9 @@ def main():
             return soil
 
     soil = {
-        25: read_soil_properties(LOCAL_ARCHIVE_PATH_TO_PROJECT + "Soil_data/climate_change_Tus_soil_r25.csv"),
-        50: read_soil_properties(LOCAL_ARCHIVE_PATH_TO_PROJECT + "Soil_data/climate_change_Tus_soil_r50.csv"),
-        100: read_soil_properties(LOCAL_ARCHIVE_PATH_TO_PROJECT + "Soil_data/climate_change_Tus_soil_r100.csv")
+        25: read_soil_properties(PATHS[USER]["LOCAL_ARCHIVE_PATH_TO_PROJECT"] + "Soil_data/climate_change_Tus_soil_r25.csv"),
+        50: read_soil_properties(PATHS[USER]["LOCAL_ARCHIVE_PATH_TO_PROJECT"] + "Soil_data/climate_change_Tus_soil_r50.csv"),
+        100: read_soil_properties(PATHS[USER]["LOCAL_ARCHIVE_PATH_TO_PROJECT"] + "Soil_data/climate_change_Tus_soil_r100.csv")
     }
 
 
@@ -301,11 +311,7 @@ def main():
                             period = period_gcm["period"]
                             gcm = period_gcm["gcm-rcp"]
 
-                            init_date = {
-                                "0": "1980",
-                                "2": "2040",
-                                "3": "2070"
-                            }[period] + "-01-01"
+                            init_date = start_year[period] + "-01-01"
 
                             for kkk in range(3):
                                 env["cropRotation"][0]["worksteps"][kkk]["date"] = init_date
@@ -325,9 +331,9 @@ def main():
                                 climate_filename = "daily_mean_P{}_RES{}_C{:04d}R{}.csv".format(period, climate_resolution, col, row)
                                 
                             if LOCAL_RUN:
-                                env["pathToClimateCSV"] = LOCAL_ARCHIVE_PATH_TO_PROJECT + "Climate_data/res_" + str(climate_resolution) + "/period_" + period + "/GRCP_" + grcp + "/" + climate_filename
+                                env["pathToClimateCSV"] = PATHS[USER]["LOCAL_ARCHIVE_PATH_TO_PROJECT"] + "Climate_data/res_" + str(climate_resolution) + "/period_" + period + "/GRCP_" + grcp + "/" + climate_filename
                             else:
-                                env["pathToClimateCSV"] = ARCHIVE_PATH_TO_PROJECT + "Climate_data/res_" + str(climate_resolution) + "/period_" + period + "/GRCP_" + grcp + "/" + climate_filename
+                                env["pathToClimateCSV"] = PATHS[USER]["ARCHIVE_PATH_TO_PROJECT"] + "Climate_data/res_" + str(climate_resolution) + "/period_" + period + "/GRCP_" + grcp + "/" + climate_filename
 
                             #initialize nitrate/ammonium in soil layers at start of simulation 
                             #for i in range(3):

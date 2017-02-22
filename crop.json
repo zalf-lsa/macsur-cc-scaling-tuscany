@@ -51,15 +51,7 @@
                         "amount": [50, "kg N"],
                         "partition": ["ref", "fert-params", "U"]
                     },
-                    { 
-                        "type": "AutomaticHarvesting", 
-                        "latest-date": "0001-07-25",
-                        "min-%-asw": 0,
-                        "max-%-asw": 100,
-                        "max-3d-precip-sum": 999,
-                        "max-curr-day-precip": 999,
-                        "harvest-time": "maturity"
-				    },
+                    { "date": "0001-06-25", "type": "Harvest"},
                     { "date": "0001-09-20", "type": "TillageApplication",
                       "depth": 0.3
                     }
@@ -90,16 +82,8 @@
                         "amount": [220, "kg N"],
                         "partition": ["ref", "fert-params", "U"]
                     },
-                    { 
-                        "type": "AutomaticHarvesting", 
-                        "latest-date": "0000-11-03",
-                        "min-%-asw": 0,
-                        "max-%-asw": 100,
-                        "max-3d-precip-sum": 999,
-                        "max-curr-day-precip": 999,
-                        "harvest-time": "maturity"
-				    },
-                    { "date": "0000-11-10", "type": "TillageApplication",
+                    { "date": "0000-10-03", "type": "Harvest"},
+                    { "date": "0000-10-10", "type": "TillageApplication",
                       "depth": 0.3
                     }
                 ]

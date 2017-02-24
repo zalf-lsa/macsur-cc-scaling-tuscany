@@ -29,7 +29,7 @@ import sys
 #sys.path.insert(0, "C:\\Users\\berg.ZALF-AD\\GitHub\\monica\\project-files\\Win32\\Release")
 #sys.path.insert(0, "C:\\Users\\berg.ZALF-AD\\GitHub\\monica\\project-files\\Win32\\Debug")
 #sys.path.insert(0, "C:\\Users\\berg.ZALF-AD\\GitHub\\monica\\src\\python")
-sys.path.insert(0, "C:\\Program Files (x86)\\MONICA")
+#sys.path.insert(0, "C:\\Program Files (x86)\\MONICA")
 print sys.path
 #sys.path.append('C:/Users/berg.ZALF-AD/GitHub/util/soil')
 #from soil_conversion import *
@@ -38,11 +38,11 @@ import zmq
 import monica_io
 #print "path to monica_io: ", monica_io.__file__
 
-#print "pyzmq version: ", zmq.pyzmq_version()
+print "pyzmq version: ", zmq.pyzmq_version(), " zmq version: ", zmq.zmq_version()
 #print "sys.path: ", sys.path
 #print "sys.version: ", sys.version
 
-USER = "berg"
+USER = "berg2"
 LOCAL_RUN = False
 
 PATHS = {
@@ -53,6 +53,11 @@ PATHS = {
     },
     "berg": {
         "INCLUDE_FILE_BASE_PATH": "C:/Users/berg.ZALF-AD.000/Documents/GitHub",
+        "LOCAL_ARCHIVE_PATH_TO_PROJECT": "P:/macsur-scaling-cc-tuscany/",
+        "ARCHIVE_PATH_TO_PROJECT": "/archiv-daten/md/projects/macsur-scaling-cc-tuscany/"
+    },
+    "berg2": {
+        "INCLUDE_FILE_BASE_PATH": "C:/Users/berg.ZALF-AD/GitHub",
         "LOCAL_ARCHIVE_PATH_TO_PROJECT": "P:/macsur-scaling-cc-tuscany/",
         "ARCHIVE_PATH_TO_PROJECT": "/archiv-daten/md/projects/macsur-scaling-cc-tuscany/"
     }
@@ -273,12 +278,18 @@ def main():
 
     for c2s in climate_to_soil:
 
+        step = c2s["step"]
         climate_resolution = c2s["climate"]
         soil_resolution = c2s["soil"]
+
+        #if int(step) != 1:
+        #    continue
 
         climate_to_soils = defaultdict(set)
         for mmm in lookup:
             climate_to_soils[mmm[climate_resolution]].add(mmm[soil_resolution])
+
+        print "step: ", step, " ", len(climate_to_soils), " runs in climate_res: ", climate_resolution, " and soil_res: ", soil_resolution
 
         for climate_coord, soil_coords in climate_to_soils.iteritems():
 
@@ -349,6 +360,8 @@ def main():
                                                 + "|" + gcm \
                                                 + "|" + production_id
 
+                            #with open("envs/env-"+str(i)+".json", "w") as _:
+                            #    _.write(json.dumps(env))
                             
                             socket.send_json(env)
                             print "sent env ", i, " customId: ", env["customId"]

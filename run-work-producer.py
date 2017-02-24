@@ -269,7 +269,7 @@ def main():
         "PLN": {"water-response": True, "nitrogen-response": True}
     }
 
-    i = 0
+    i = 1
     start_store = time.clock()
     #start = config["start"] - 1
     #end = config["end"] - 1
@@ -371,7 +371,7 @@ def main():
 
     stop_store = time.clock()
 
-    print "sending ", i, " envs took ", (stop_store - start_store), " seconds"
+    print "sending ", (i-1), " envs took ", (stop_store - start_store), " seconds"
     #print "ran from ", start, "/", row_cols[start], " to ", end, "/", row_cols[end]
     return
 

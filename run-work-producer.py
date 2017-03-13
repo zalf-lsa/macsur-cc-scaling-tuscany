@@ -292,12 +292,12 @@ def main():
 
         print "step: ", step, " ", len(climate_to_soils), " runs in climate_res: ", climate_resolution, " and soil_res: ", soil_resolution
 
-        for climate_coord, soil_coords in climate_to_soils.iteritems():
+        for (climate_row, climate_col), soil_coords in climate_to_soils.iteritems():
 
-            for row, col in soil_coords:
+            for soil_row, soil_col in soil_coords:
 
                 for crop_id in ["W", "M"]:
-                    max_rootdepth = update_soil_crop_dates(soil_resolution, row, col, crop_id)
+                    max_rootdepth = update_soil_crop_dates(soil_resolution, soil_row, soil_col, crop_id)
                     env = monica_io.create_env_json_from_json_config({
                         "crop": crop,
                         "site": site,
@@ -338,9 +338,9 @@ def main():
                             #    continue
 
                             if period != "0":
-                                climate_filename = "daily_mean_P{}_GRCP_{}_RES{}_C{:04d}R{}.csv".format(period, grcp, climate_resolution, col, row)
+                                climate_filename = "daily_mean_P{}_GRCP_{}_RES{}_C{:04d}R{}.csv".format(period, grcp, climate_resolution, climate_col, climate_row)
                             else:
-                                climate_filename = "daily_mean_P{}_RES{}_C{:04d}R{}.csv".format(period, climate_resolution, col, row)
+                                climate_filename = "daily_mean_P{}_RES{}_C{:04d}R{}.csv".format(period, climate_resolution, climate_col, climate_row)
                                 
                             if LOCAL_RUN:
                                 env["pathToClimateCSV"] = PATHS[USER]["LOCAL_ARCHIVE_PATH_TO_PROJECT"] + "Climate_data/res_" + str(climate_resolution) + "/period_" + period + "/GRCP_" + grcp + "/" + climate_filename
@@ -353,9 +353,9 @@ def main():
 
                             env["customId"] = crop_id \
                                                 + "|" + str(climate_resolution) \
-                                                + "|(" + str(climate_coord[0]) + "/" + str(climate_coord[1]) + ")" \
+                                                + "|(" + str(climate_row) + "/" + str(climate_col) + ")" \
                                                 + "|" + str(soil_resolution) \
-                                                + "|(" + str(row) + "/" + str(col) + ")" \
+                                                + "|(" + str(soil_row) + "/" + str(soil_col) + ")" \
                                                 + "|" + period \
                                                 + "|" + grcp \
                                                 + "|" + gcm \
